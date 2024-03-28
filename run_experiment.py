@@ -2,7 +2,7 @@
 # ESTABLISH THE WORKING ENVIRONMENT
 #=====================
 import pandas as pd
-import numpy as np
+import numpy as nps
 import os
 
 from psychtoolbox import WaitSecs, GetSecs
@@ -16,6 +16,7 @@ from run_experiment_helper import display_instruction,\
     get_datetime_string, get_key_values_when_response, get_key_values_when_noresponse, get_df,\
     save_output
 
+from pseudorandomization import shuffled_df
 # experiment specific stuff
 import experiment_params as params
 
@@ -24,7 +25,9 @@ import experiment_params as params
 #COLLECT PARTICIPANT INFO
 #=====================
 #-create a dialogue box for participant information
-exp_info = {'participant_id':0, 'age':0, 'handedness':('right','left','ambi')}
+# counterbalance 1: LEFT: YES, RIGHT: NO
+# counterbalance 2: LEFT: NO, RIGHT: YES
+exp_info = {'participant_id':0, 'age':0, 'handedness':('right','left','ambi'), 'counterbalance': 0}
 # my_dlg = gui.DlgFromDict(dictionary=exp_info)
 
 # # check for valid participant data, make sure subject data is entered correctly
@@ -41,7 +44,7 @@ exp_info['time'] = time_stamp
 
 # create a unique filename for the data
 # don't forget to turn integers into strings for the filename, don't forget to add the filetype at the end: csv, txt...
-experiment_mark = 'toneclouds_pid' + str(exp_info['participant_id']) + '_' + exp_info['time'] + '.tsv'
+experiment_mark = 'detection_task_toneclouds_pid' + str(exp_info['participant_id']) + '_' + exp_info['time'] + '.tsv'
 
 #=====================
 #SET UP THE SYSTEM 
@@ -59,9 +62,9 @@ win = visual.Window([800,600], fullscr=False, monitor="testMonitor", units="cm")
 # learn nblocks
 # counterbalance the order of block presentation
 # i think in my case there is no need for counterbalancing because all blocks are similar
-block_list = os.listdir(params.table_dir)
-block_list = [s for s in block_list if '.DS_Store' not in s]
-nBlocks = len(block_list)
+files_in_tabledir = os.listdir(params.table_dir)
+blocks = [file for file in files_in_tabledir if file.endswith('.tsv')]
+nBlocks = params.nblocks
 
 for iblock in range(1):
     #=====================
@@ -69,7 +72,7 @@ for iblock in range(1):
     #=====================
     # then, go to a specific directory of experiment table and later stim set that belong to a specific directory
     which_block = iblock + 1
-
+    df, nTrials = get_df(which_block, params)
     # give the instructions and block related information here
     block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press space bar to start'
     display_instruction(block_start_text, win)

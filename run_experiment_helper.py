@@ -216,7 +216,7 @@ def get_key_values_when_noresponse(max_wait_time):
 def get_df(which_block, params):
 
     # read out the data frame, it is pseudorandomized
-    table_name = f'block_{which_block}_randomized_table.tsv'
+    table_name = f'block_{which_block}_table.tsv'
     table_for_block = op.join(params.table_dir, table_name)
     df = pd.read_csv(table_for_block, sep = '\t')
     nTrials = len(df)
