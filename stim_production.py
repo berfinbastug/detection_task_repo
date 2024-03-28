@@ -1,24 +1,7 @@
-# %%
-#=====================
-#IMPORT MODULES
-#=====================
-
-
-from scipy.io.wavfile import write
-
-
-import matplotlib.pyplot as plt
-from scipy import signal
-from psychtoolbox import audio, PsychPortAudio, hid 
-import pandas as pd
-
-from psychtoolbox import WaitSecs, GetSecs
-import time
-import experiment_params as params
-
 #=====================
 #DEFINE DIRECTORIES
 #=====================
+import experiment_params as params
 import os
 stimuli_dir = params.stimuli_dir
 data_dir = params.data_dir
@@ -46,8 +29,13 @@ combinations = list(itertools.product(unit_dur_list, rep_percentage_list))
 #=====================
 #CREATE THE DATA FRAME
 #=====================
+import pandas as pd
+import time
 from data_frame_functions import generate_baseline_table
 from stim_production_functions import gencloudcoherence
+from scipy.io.wavfile import write
+from scipy import signal
+import pickle
 
 # within a block, the number of 0 percent condition is 27, for each duration
 # Again, for each duration, there are basically two crude categories: 
@@ -81,7 +69,6 @@ for iblock in range(params.nblocks):
     os.makedirs(signal_dir, exist_ok=True)
 
     # first, generate bunch of lists
-
     table_values, ntrials = generate_baseline_table(unit_dur_list, rep_percentage_list, n_percentage_zero, n_rest)
 
     # Create a DataFrame from the list
@@ -150,8 +137,6 @@ for iblock in range(params.nblocks):
     #=====================
     #SAVE THE SIGNAL VARIABLE
     #=====================
-    import pickle
-
     # Save the signal variable as a pickle file
     signal_filename = 'block_' + str(block_id) + '_signal.pkl'
     signal_path = os.path.join(signal_dir, signal_filename)
