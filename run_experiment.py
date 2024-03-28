@@ -12,7 +12,7 @@ import psychopy.parallel as parallel
 
 
 from run_experiment_helper import display_instruction,\
-    setup_audio, display_feedback, parse_response,\
+    setup_audio_files, display_feedback, parse_response,\
     get_datetime_string, get_key_values_when_response, get_key_values_when_noresponse, get_df,\
     save_output
 
@@ -70,17 +70,11 @@ for iblock in range(1):
     #=====================
     #PRESENT INSTRUCTIONS
     #=====================
-    # then, go to a specific directory of experiment table and later stim set that belong to a specific directory
     which_block = iblock + 1
+    # read out the data frame
     df, nTrials = get_df(which_block, params)
-    # give the instructions and block related information here
-    block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press space bar to start'
-    display_instruction(block_start_text, win)
-    # Wait for any key press to continue
-    kb.waitKeys(keyList=['space'], waitRelease=True)
-    
-    # read out the data frame, it is pseudorandomized
-    df, nTrials = get_df(which_block, params)
+    # pseudorandomize the data frame
+    random_df = shuffled_df(df, params.table_dir, exp_info['participant_id'], which_block)
 
     #=====================
     #PRELOAD STIMULUI
@@ -93,7 +87,40 @@ for iblock in range(1):
     stim_for_block = os.path.join(params.sound_dir,f'block{which_block}')  
     # define stimuli, which is stream in my case
     # setup audio stream 
+    # Open audio stream
+
+    print(audio.get_devices())
+    device_ids = [i_device for i_device, device in enumerate(audio.get_devices()) if device['DeviceName'] == params.device_name]
+    print(device_ids)
+    assert (len(device_ids) == 1)
+    params.device_id = device_ids[0]
+
+    # Initialize an audio stream with the global sampling rate and channels
+    stream = [audio.Stream(freq=fs, channels=channels, device_id = params.device_id)]
+        # play empty sound at first
+    # Create an empty stimulus buffer with 0.1 seconds duration
+    stimulus = np.zeros((int(fs*.1), channels))
+    
+    # Fill the buffer for each slave in the audio stream and start playback
+    for slave in stream:
+        PsychPortAudio('FillBuffer', slave.handle, stimulus)
+        PsychPortAudio('Start', slave.handle)
+
+    # stream is ready now
+    stream[0].stimuli = stimuli
+
+    return stream
+
     stream = setup_audio(sound_filenames, stim_for_block, params)
+    # give the instructions and block related information here
+    block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press any button to start'
+    display_instruction(block_start_text, win)
+    # Wait for any key press to continue
+    kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
+    
+
+
+
 
     #=====================
     #TIMING PARAMETERS
