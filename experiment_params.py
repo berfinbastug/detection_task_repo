@@ -31,7 +31,6 @@ iti = 1  # inter trial interval
 #=====================
 #OUTPUT
 #=====================
-response_keys = ['2', '3']  # we are using the response box downstairs
 keys_output_columns = ['block_idx','trial_idx', 'rt','key_name', 'key_tDown', 'button_press_duration','stim_code', 'expected_response', 'actual_response', 'counterbalance_condition']
 #=====================
 #SET UP AUDIO PARAMETERS

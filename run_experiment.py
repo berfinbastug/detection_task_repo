@@ -2,19 +2,20 @@
 # ESTABLISH THE WORKING ENVIRONMENT
 #=====================
 import pandas as pd
-import numpy as nps
+import numpy as np
 import os
 
 from psychtoolbox import WaitSecs, GetSecs
 from psychopy import core, gui, visual, event, monitors
 from psychopy.hardware import keyboard
 import psychopy.parallel as parallel
+from psychtoolbox import audio, PsychPortAudio
 
 
-from run_experiment_helper import display_instruction,\
-    setup_audio_files, display_feedback, parse_response,\
+from run_experiment_helper import display_text,\
+    setup_audio_files, calculate_performance,\
     get_datetime_string, get_key_values_when_response, get_key_values_when_noresponse, get_df,\
-    save_output
+    save_output, check_response
 
 from pseudorandomization import shuffled_df
 # experiment specific stuff
@@ -84,44 +85,12 @@ for iblock in range(1):
     sound_filenames = df['stim_name'].to_list()
     # this directory is necessary while reading from wav-files
     # search the sound in a specific block folder
-    stim_for_block = os.path.join(params.sound_dir,f'block{which_block}')  
+    stim_for_block = os.path.join(params.stimuli_dir,f'block{which_block}')  
     # define stimuli, which is stream in my case
     # setup audio stream 
     # Open audio stream
-
-    print(audio.get_devices())
-    device_ids = [i_device for i_device, device in enumerate(audio.get_devices()) if device['DeviceName'] == params.device_name]
-    print(device_ids)
-    assert (len(device_ids) == 1)
-    params.device_id = device_ids[0]
-
-    # Initialize an audio stream with the global sampling rate and channels
-    stream = [audio.Stream(freq=fs, channels=channels, device_id = params.device_id)]
-        # play empty sound at first
-    # Create an empty stimulus buffer with 0.1 seconds duration
-    stimulus = np.zeros((int(fs*.1), channels))
+    stimuli, channels, fs = setup_audio_files(sound_filenames, stim_for_block, params)
     
-    # Fill the buffer for each slave in the audio stream and start playback
-    for slave in stream:
-        PsychPortAudio('FillBuffer', slave.handle, stimulus)
-        PsychPortAudio('Start', slave.handle)
-
-    # stream is ready now
-    stream[0].stimuli = stimuli
-
-    return stream
-
-    stream = setup_audio(sound_filenames, stim_for_block, params)
-    # give the instructions and block related information here
-    block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press any button to start'
-    display_instruction(block_start_text, win)
-    # Wait for any key press to continue
-    kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
-    
-
-
-
-
     #=====================
     #TIMING PARAMETERS
     #=====================
@@ -135,12 +104,47 @@ for iblock in range(1):
     # I also need the list of stimulus onset asynchrony (soa or isi)
     # In this context, it only matters when participants exceeds the response window.
     # It is the maximum amount of waiting time, if they respond earlier, ISI will be defined based on their reaction time
-    tISI = df['ISI'].to_list()
+    tISI = df['max_isi'].to_list()
 
     #=====================
     #PREPARE DATA FRAME TO STORE OUTPUT
     #=====================
     keys_output = pd.DataFrame(columns=params.keys_output_columns)
+
+    #=====================
+    #DEFINE STIMULI
+    #=====================
+    # which is stream in my case
+    device_ids = [i_device for i_device, device in enumerate(audio.get_devices()) if params.device_name in device['DeviceName']]
+    for i_device, device in enumerate(audio.get_devices()):
+        if params.device_name in device['DeviceName']:
+            print(device['DeviceName'])
+
+    assert (len(device_ids) == 1)
+    params.device_id = device_ids[0]
+
+    # Initialize an audio stream with the global sampling rate and channels
+    stream = [audio.Stream(freq=fs, device_id = params.device_id, channels=channels)]
+    
+    # play empty sound at first
+    # Create an empty stimulus buffer with 0.1 seconds duration
+    stimulus = np.zeros((int(fs*.1), channels))
+    
+    # Fill the buffer for each slave in the audio stream and start playback
+    for slave in stream:
+        PsychPortAudio('FillBuffer', slave.handle, stimulus)
+        PsychPortAudio('Start', slave.handle)
+
+    # stream is ready now
+    stream[0].stimuli = stimuli
+
+
+    # give the instructions and block related information here
+    block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press any button to start'
+    display_text(block_start_text, win)
+    # Wait for any key press to continue
+    kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
+    
     
     #=====================
     #LEARN WHEN THE BLOCK STARTS AND CLEAR THE EXISTING EVENTS IF ANY
@@ -155,8 +159,14 @@ for iblock in range(1):
         #=====================
         #START TRIAL
         #===================== 
-        block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press space bar to start'
-        t_trial = display_instruction(f'Trial {itrial + 1} of {10}\n', win)
+        if exp_info['counterbalance'] == 1:
+            # LEFT (2): YES, RIGHT (3): NO
+            instruction_text = f'Trial {itrial + 1} of {nTrials}\n LEFT: YES       RIGHT: NO'
+        elif exp_info['counterbalance'] == 2:
+            # LEFT (2): NO, RIGHT (3): YES
+            instruction_text = f'Trial {itrial + 1} of {nTrials}\n LEFT: NO       RIGHT: YES'
+        
+        t_trial = display_text(instruction_text, win)
         
         # setup trial specific parameters
         row = df.loc[itrial]
@@ -172,7 +182,7 @@ for iblock in range(1):
             onset_time = wakeup + 0.5
         # after the first trial, the onset_time will be saved to the tonsets
         else:
-            onset_time = tonsets[itrial-1]+ reaction_time + params.wait_after_rt
+            onset_time = tonsets[itrial-1]+ reaction_time + row['iti']
 
         # present stimuli and collect responses
         tonset = stream[0].start(when = onset_time, wait_for_start = 1)
@@ -182,11 +192,15 @@ for iblock in range(1):
         kb.clock.reset()
 
         # get the keys
-        keys = kb.waitKeys(maxWait= max_wait_time, keyList= params.response_keys, waitRelease=True)
+        keys = kb.waitKeys(maxWait= max_wait_time, keyList= ['2', '3'], waitRelease=True)
         
         if keys is not None:
             stream[0].stop()
-            reaction_time, name, tDown, button_press_duration = get_key_values_when_response(keys)
+            if keys[0].name == 'escape':
+                core.quit()
+            else:
+                reaction_time, name, tDown, button_press_duration = get_key_values_when_response(keys)
+                actual_response = check_response(exp_info['counterbalance'], name)
 
         else:
             reaction_time, name, tDown, button_press_duration = get_key_values_when_noresponse(max_wait_time)
@@ -198,15 +212,27 @@ for iblock in range(1):
                                                'key_name': name,  
                                                'key_tDown': tDown,
                                                'button_press_duration': button_press_duration,
-                                               'stim_code': stim_code})])
+                                               'stim_code': stim_code,
+                                               'expected_response': row['expected_response'],
+                                               'actual_response': actual_response,
+                                               'counterbalance_condition': exp_info['counterbalance']})])
         
-
+        
         save_output(keys_output, experiment_mark,which_block, params)
+        percent_correct = calculate_performance(keys_output)
 
+        feedback_text = f'Percentage correct is: {percent_correct}%, press any button to continue'
+        display_text(feedback_text, win)
+        kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
+        stream[0].close()
 
-    # % END SESSION
-    win.close()
+experiment_end_text = 'end of the experiment, press any button to end the experiment'
+display_text(experiment_end_text, win)
+kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
+
+# % END SESSION
+win.close()
 
  
     
