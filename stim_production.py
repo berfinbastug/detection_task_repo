@@ -22,7 +22,7 @@ unit_dur_list = unit_dur_cond.tolist()
 rep_percentage_cond = np.linspace(params.min_rep_percentage, params.max_rep_percentage, params.n_rep_percentage_cond)  
 rep_percentage_list = rep_percentage_cond.tolist()
 
-# Generate all combinations of repdur and coherency
+# Generate all combinations of repdur and percentage
 # in one block, there should be 60 examples of non zero percentages, and 360 examples of the zero percentage
 combinations = list(itertools.product(unit_dur_list, rep_percentage_list))
 
