@@ -1,15 +1,4 @@
 #=====================
-#DIRECTORY NAMES
-#=====================
-# main dir in my computer and the computer downstairs is different. change this for your need
-main_dir = '/Users/bastugb/Desktop/detection_task'
-
-# subfolders
-data_dir  =  main_dir + '/data'
-stimuli_dir = main_dir + '/stimuli'
-table_dir = main_dir + '/tables'
-
-#=====================
 #STIMULUS RELATED PARAMETERS
 #=====================
 # DURATION, IV 1

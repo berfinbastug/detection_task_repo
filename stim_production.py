@@ -1,18 +1,33 @@
 #=====================
+#IMPORT IMPORTANT STUFF
+#=====================
+import os
+import experiment_params as params
+import numpy as np
+import itertools
+import pandas as pd
+import time
+from data_frame_functions import generate_baseline_table
+from stim_production_functions import gencloudcoherence
+from scipy.io.wavfile import write
+from scipy import signal
+import pickle
+
+#=====================
 #DEFINE DIRECTORIES
 #=====================
-import experiment_params as params
-import os
-stimuli_dir = params.stimuli_dir
-data_dir = params.data_dir
-table_dir = params.table_dir
+# when I switch to a new computer, just change the main_dir
+main_dir = '/Users/bastugb/Desktop/detection_task_v2'
+stimuli_dir = main_dir + '/stimuli'
+data_dir = main_dir + '/data'
+table_dir = main_dir + '/tables'
+
+# create the table directory to start with
 os.makedirs(table_dir, exist_ok=True)
 
 #=====================
 #VARIABLES
 #=====================
-import numpy as np
-import itertools
 # IV 1: DURATION
 # Generate a linearly spaced array
 unit_dur_cond = np.linspace(params.min_unit_dur, params.max_unit_dur, params.n_unit_dur_cond)
@@ -29,14 +44,6 @@ combinations = list(itertools.product(unit_dur_list, rep_percentage_list))
 #=====================
 #CREATE THE DATA FRAME
 #=====================
-import pandas as pd
-import time
-from data_frame_functions import generate_baseline_table
-from stim_production_functions import gencloudcoherence
-from scipy.io.wavfile import write
-from scipy import signal
-import pickle
-
 # within a block, the number of 0 percent condition is 27, for each duration
 # Again, for each duration, there are basically two crude categories: 
 # stimulus absent(percentage_zero) and stimulus present(the remainin 9 levels)
@@ -75,11 +82,13 @@ for iblock in range(params.nblocks):
     table_values = pd.DataFrame(table_values, columns=['unitdur', 'percentage', 'stim_code', 'expected_response'])
     
     # add other things to the data frame
+    # first add block id and inter trial interval
     table_values.insert(0, 'block', block_id*np.ones(ntrials, dtype='int')) 
     table_values.insert(len(table_values.columns), 'iti', params.iti*np.ones(ntrials, dtype='int')) 
 
     # Create an array of ntrials random seed values
-    # I will use them when i create tone clouda
+    # I will use them when i create tone clouds
+    # add these seed values to your table
     rng = np.random.default_rng(int(time.time()))
     seed_values = rng.uniform(low = 0, high = 2**32-1, size = ntrials)
     table_values.insert(len(table_values.columns), 'seed', seed_values)
@@ -105,7 +114,7 @@ for iblock in range(params.nblocks):
         y, sP = gencloudcoherence(change_dict=change_dict)
 
         # Create the output file name
-        stim_name = 'index_' + str(index) + '_unitdur_' + str(unitdur) + '_percentage_' + str(percentage) + '.wav'
+        stim_name = 'detection_experiment_index_' + str(index) + '_unitdur_' + str(unitdur) + '_percentage_' + str(percentage) + '.wav'
         table_values.loc[index, 'stim_name'] = stim_name
         
         # Save the audio data to a file in the "stimuli" folder
@@ -129,14 +138,12 @@ for iblock in range(params.nblocks):
         isi_value = row['stim_duration'] + row['iti']
         table_values.loc[index, 'max_isi'] = isi_value
 
+
     # save the data frame
-    tsv_filename = 'block_' + str(block_id) + '_table.tsv'    
+    tsv_filename = 'detection_experiment_block_' + str(block_id) + '_table.tsv'    
     table_path = os.path.join(table_dir, tsv_filename)
     table_values.to_csv(table_path, sep='\t', index=False)
 
-    #=====================
-    #SAVE THE SIGNAL VARIABLE
-    #=====================
     # Save the signal variable as a pickle file
     signal_filename = 'block_' + str(block_id) + '_signal.pkl'
     signal_path = os.path.join(signal_dir, signal_filename)
