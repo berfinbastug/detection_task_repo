@@ -11,14 +11,12 @@ import pkg_resources
 import experiment_params
 
 
-
 #=====================
 #GET DATE TIME AS STRING
 #=====================
 def get_datetime_string():
     now = datetime.now()
     return now.strftime("%Y%m%d_%H%M%S"), now.strftime("%Y%m%d")
-
 
 
 #=====================
@@ -111,10 +109,11 @@ def check_response(counterbalance_info, key_name):
 #=====================
 #CALCULATE PERFORMANCE
 #====================
-def calculate_performance(keys_output)
+def calculate_performance(keys_output):
     total_cases = len(keys_output)
     matching_cases = (keys_output['expected_response'] == keys_output['actual_response']).sum()
     percentage_matching = (matching_cases/total_cases)*100
+    
     return percentage_matching
 
 
@@ -140,14 +139,6 @@ def get_key_values_when_noresponse(max_wait_time):
     return reaction_time, name, tDown, button_press_duration
 
 
-def get_df(which_block, params):
-
-    # read out the data frame, it is pseudorandomized
-    table_name = f'block_{which_block}_table.tsv'
-    table_for_block = op.join(params.table_dir, table_name)
-    df = pd.read_csv(table_for_block, sep = '\t')
-    nTrials = len(df)
-    return df, nTrials
 
 
 #=====================
@@ -157,4 +148,21 @@ def save_output(output, experiment_mark, which_block, params):
     file_name = 'block_no_'+str(which_block)+ '_' + experiment_mark
     output_data_directory = op.join(params.data_dir, file_name)
     output.to_csv(output_data_directory, sep='\t', index=False)
+
+
+#=====================
+#GET COUNTERBALANCE INSTRUCTION
+#====================
+# counterbalance value is something experimenter defines before hand.
+# it might be saved in exp_info['counterbalance']
+# the value can be 1 and 2, depending on the value, right button will be a yes or no button
+def get_counterbalance_instruction(counterbalance_value, nTrials, itrial):
+    if counterbalance_value == 1:
+        # LEFT (2): YES, RIGHT (3): NO
+        instruction_text = f'Trial {itrial + 1} of {nTrials}\n LEFT: YES       RIGHT: NO'
+    elif counterbalance_value == 2:
+        # LEFT (2): NO, RIGHT (3): YES
+        instruction_text = f'Trial {itrial + 1} of {nTrials}\n LEFT: NO       RIGHT: YES'
+    
+    return instruction_text
 

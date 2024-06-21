@@ -17,7 +17,7 @@ import pickle
 #DEFINE DIRECTORIES
 #=====================
 # when I switch to a new computer, just change the main_dir
-main_dir = '/Users/bastugb/Desktop/detection_task_v2'
+main_dir = '/Users/bastugb/Desktop/detection_experiment_v2'
 stimuli_dir = main_dir + '/stimuli'
 data_dir = main_dir + '/data'
 table_dir = main_dir + '/tables'

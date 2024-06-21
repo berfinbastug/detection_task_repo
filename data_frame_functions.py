@@ -62,9 +62,9 @@ def check_consecutive_occurrences(arr):
     return True
 
 
-def pseudorandomize_and_save_df(df, which_block,exp_info, table_dir):
+def pseudorandomize_and_save_df(df, which_block, exp_info, table_dir):
     # pseudo randomize the data frame for each individual
-    # condition: any value should not occur more than three times consecutively
+    # condition: any percentage value should not occur more than three times consecutively
     # shuffle dataframe rows until the condition is met
     while True:
         df_shuffled = df.sample(frac=1).reset_index(drop=True)  # Shuffle rows
@@ -72,7 +72,7 @@ def pseudorandomize_and_save_df(df, which_block,exp_info, table_dir):
             break
 
     # save this shuffled table immediately before you forget
-    shuffled_df_filename = 'block_' + str(which_block) + '_pid_' + str(exp_info['participant_id']) + '_randomized_table.tsv'
+    shuffled_df_filename = 'detection_experiment_block_' + str(which_block) + '_pid_' + str(exp_info['participant_id']) + '_randomized_table.tsv'
     table_path = table_dir + '/participant_specific_tables/' + shuffled_df_filename
     df_shuffled.to_csv(table_path, sep='\t', index=False)
     return df_shuffled
