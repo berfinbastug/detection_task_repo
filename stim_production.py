@@ -8,7 +8,7 @@ import itertools
 import pandas as pd
 import time
 from data_frame_functions import generate_baseline_table
-from stim_production_functions import gencloudcoherence
+from tone_cloud_production import gencloudcoherence
 from scipy.io.wavfile import write
 from scipy import signal
 import pickle
