@@ -1,5 +1,13 @@
 import itertools
+# this function generates a list of trial conditions for an experiment 
+# based on the provided parameters. 
+# It creates combinations of unit durations and repetition percentages and assigns a specific stimulus code 
+# for each combination, along with expected responses. 
 
+# column 1: unit duration
+# column 2: repetition percentage
+# column 3: stimulus code
+# column 4: expected response    
 def generate_baseline_table(unit_dur_list, rep_percentage_list, n_percentage_zero, n_rest):
     
     # first, generate bunch of lists
@@ -20,19 +28,3 @@ def generate_baseline_table(unit_dur_list, rep_percentage_list, n_percentage_zer
         ntrials = len(table_values)
 
     return table_values, ntrials
-
-
-#=====================
-#PSEUDORANDOMIZATION
-#=====================
-# Function to check if any value occurs more than three times consecutively
-def check_consecutive_occurrences(arr):
-    count = 1
-    for i in range(1, len(arr)):
-        if arr[i] == arr[i-1]:
-            count += 1
-            if count > 3:
-                return False
-        else:
-            count = 1
-    return True
