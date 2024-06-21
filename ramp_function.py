@@ -1,7 +1,4 @@
 # here my aim is to transform an existing matlab function into a python code
-#=====================
-#IMPORT NECESSARY LIBRARIES
-#=====================
 
 import numpy as np
 
