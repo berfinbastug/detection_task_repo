@@ -4,8 +4,6 @@
 #=====================
 
 import numpy as np
-import stimulus_params
-import copy
 
 # The psyramp function is designed to apply a cosine-squared ramp (fade-in and fade-out) to a signal x. 
 # This can be useful in audio processing to smoothly transition the start and end of a signal to avoid 
