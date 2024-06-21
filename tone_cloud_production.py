@@ -1,40 +1,25 @@
 # here my aim is to transform an existing matlab function into a python code
 
-#=====================
-#IMPORT NECESSARY LIBRARIES
-#=====================
-
+# imports & setups
 import numpy as np
 import stimulus_params
 import copy
+import ramp_function as rf
 
-#=====================
-#FUNCTION NUMBER 1
-#=====================
-# this one is a separate function normally but I embedded it here I don't know whether I am doing it right
-def psyramp(x, rtime, fs):
-
-    # rtime in seconds
-    lt = len(x)
-    tr = np.arange(0, rtime-1/fs, 1/fs)
-    lr = len(tr)
-    rampup = ((np.cos(2 * np.pi * tr / rtime / 2 + np.pi) + 1) / 2) ** 2
-    rampdown = ((np.cos(2 * np.pi * tr / rtime / 2) + 1) / 2) ** 2
-    xr = x.copy()
-    xr[:lr] = rampup * x[:lr]
-    xr[lt - lr:lt] = rampdown * x[lt - lr:lt]
-    return xr
-
-#=====================
-#FUNCTION NUMBER 2
-#=====================
+# A deep copy of the default stimulus parameters is created to avoid modifying the original parameters.
 deepCopysP = copy.deepcopy(stimulus_params.sP_default)
+
+# input parameters
+# sP: A dictionary of stimulus parameters, defaulting to deepCopysP.
+# change_dict: An optional dictionary to modify specific parameters in sP.
 
 # Define the main function with optional parameters (sP is set to None by default)
 def gencloudcoherence(sP=deepCopysP, change_dict = None):
     
     # Set the parameters with default values 
     # print(change_dict)
+    # update parameters
+    # If change_dict is provided, update the parameters in sP accordingly.
     if change_dict is not None:
         # let's find out the things that have to change
         params2change = change_dict.keys()
@@ -45,13 +30,18 @@ def gencloudcoherence(sP=deepCopysP, change_dict = None):
 
     # deal with random number generator
     # is this really working?
+    # Set the random seed for reproducibility. 
+    # If no seed is provided, generate one and store it in sP.
     if sP['seed'] is not None:
         np.random.seed(sP['seed'])
     else:
         np.random.seed()
         sP['seed'] = np.random.get_state()[1][0]
 
+
+    # frequency grid generation
     # compute lower edges of the grid
+    # Generate a logarithmic frequency grid between lowf and highf with steps defined by fstep.
     ok = 0
     freqgrid = []
     freqgrid.append(sP['lowf'])
@@ -83,6 +73,7 @@ def gencloudcoherence(sP=deepCopysP, change_dict = None):
     zt = bigt + tnorm * sP['timestep']  # perturbed values
 
     # deal with the repeating percentage of the tones
+    # Determine the number of repeated and new tones based on the percentage.
     ntones = bigf.size
     if (sP['percentage'] == 0):
         nreptones = 0
@@ -95,6 +86,7 @@ def gencloudcoherence(sP=deepCopysP, change_dict = None):
         nnewtones = ntones - nreptones
 
     # who are the lucky few, select repeated and new tones
+    # randomly select indices for repeated and new tones
     idxdraw = np.random.permutation(ntones)
     idxreptones = idxdraw[:nreptones]
     idxnewtones = idxdraw[nreptones:]
@@ -105,6 +97,7 @@ def gencloudcoherence(sP=deepCopysP, change_dict = None):
     bigzf = np.empty((nfsteps, 0))  # Initialize an empty array with the appropriate shape
     bigzt = np.empty((nfsteps, 0))  # Initialize an empty array with the appropriate shape
 
+    # Generate matrices for repeated tones and concatenate them.
     for idelay in range(1, sP['nrep'] + 1):
         
         # create new frequency and time matrices
@@ -128,13 +121,13 @@ def gencloudcoherence(sP=deepCopysP, change_dict = None):
     tx = np.arange(0, sP['tonedur'], 1 / sP['fs'])  # support for one tone
     bigx = np.zeros(int(np.ceil((sP['unitdur'] * sP['nrep'] + sP['tonedur']) * sP['fs'])))  # the full repetition
 
-
+    # Generate sine waves for each tone, apply the ramp using psyramp, and add them to the final signal.
     for itstep in range(bigzt.shape[1]):
         
         for ifstep in range(bigzf.shape[0]):
             
             tmp_tone = np.sin(2 * np.pi * tx * bigzf[ifstep, itstep])
-            xtone = psyramp(tmp_tone, sP['rtime'], sP['fs'])
+            xtone = rf.psyramp(tmp_tone, sP['rtime'], sP['fs'])
             
             # insert spectral shape here if needed
             istart = int(round(bigzt[ifstep, itstep] * sP['fs']))  # we round but no start at idx=0
