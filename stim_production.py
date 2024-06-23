@@ -17,7 +17,7 @@ import pickle
 #DEFINE DIRECTORIES
 #=====================
 # when I switch to a new computer, just change the main_dir
-main_dir = '/Users/bastugb/Desktop/detection_experiment_v2'
+main_dir = '/Users/bastugb/Desktop/detection_experiment'
 stimuli_dir = main_dir + '/stimuli'
 data_dir = main_dir + '/data'
 table_dir = main_dir + '/tables'
@@ -68,11 +68,11 @@ for iblock in range(params.nblocks):
 
     # specify specific directories
     # store the sound files in .wav format
-    specific_stimuli_dir = os.path.join(stimuli_dir, f"block{block_id}")
+    specific_stimuli_dir = os.path.join(stimuli_dir, f"detection_experiment_block{block_id}")
     os.makedirs(specific_stimuli_dir, exist_ok=True)
 
     # store sound signals 
-    signal_dir = os.path.join(data_dir, f"block{block_id}", 'signal_data')
+    signal_dir = os.path.join(data_dir, f"detection_experiment_block{block_id}", 'signal_data')
     os.makedirs(signal_dir, exist_ok=True)
 
     # first, generate bunch of lists
@@ -145,7 +145,7 @@ for iblock in range(params.nblocks):
     table_values.to_csv(table_path, sep='\t', index=False)
 
     # Save the signal variable as a pickle file
-    signal_filename = 'block_' + str(block_id) + '_signal.pkl'
+    signal_filename = 'detection_experiment_block_' + str(block_id) + '_signal.pkl'
     signal_path = os.path.join(signal_dir, signal_filename)
 
     with open(signal_path, 'wb') as f:
