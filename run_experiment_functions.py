@@ -140,15 +140,6 @@ def get_key_values_when_noresponse(max_wait_time):
 
 
 #=====================
-#SAVE OUPUT
-#====================
-def save_output(output, experiment_mark, which_block, data_dir):
-    file_name = 'block_no_'+str(which_block)+ '_' + experiment_mark
-    output_data_directory = op.join(data_dir, file_name)
-    output.to_csv(output_data_directory, sep='\t', index=False)
-
-
-#=====================
 #GET COUNTERBALANCE INSTRUCTION
 #====================
 # counterbalance value is something experimenter defines before hand.

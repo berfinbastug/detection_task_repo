@@ -79,11 +79,11 @@ def pseudorandomize_and_save_df(df, which_block, exp_info, table_dir):
 
 
 
-
 #=====================
 #SAVE OUPUT DATA FRAME
 #====================
-def save_output_df(output, experiment_mark, which_block, params):
-    file_name = 'block_no_'+str(which_block)+ '_' + experiment_mark
-    output_data_directory = op.join(params.data_dir, file_name)
+def save_output_df(output, experiment_mark, which_block, data_dir):
+    file_name = 'block_no_'+ str(which_block)+ '_' + experiment_mark
+    output_data_directory = op.join(data_dir, file_name)
     output.to_csv(output_data_directory, sep='\t', index=False)
+
