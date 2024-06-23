@@ -29,7 +29,7 @@ import run_experiment_functions as ef
 #DEFINE DIRECTORIES
 #=====================
 # when I switch to a new computer, just change the main_dir
-main_dir = '/Users/bastugb/Desktop/detection_experiment_v2'
+main_dir = '/Users/bastugb/Desktop/detection_experiment'
 stimuli_dir = main_dir + '/stimuli'
 data_dir = main_dir + '/data'
 table_dir = main_dir + '/tables'
@@ -87,7 +87,7 @@ for iblock in range(nBlocks):
     #=====================
     #READ THE BLOCK SPECIFIC DATA FRAME 
     #=====================
-    table_name = f'block_{which_block}_table.tsv'
+    table_name = f'detection_experiment_block_{which_block}_table.tsv'
     df, nTrials = dff.get_df(table_name, table_dir)
 
     #=====================
@@ -105,7 +105,7 @@ for iblock in range(nBlocks):
     # list the sound filenames, in a randomized way
     sound_filenames = df_shuffled['stim_name'].to_list()
     # search the sound in a specific block folder
-    stim_for_block = os.path.join(stimuli_dir,f'block{which_block}')  
+    stim_for_block = os.path.join(stimuli_dir,f'detection_experiment_block{which_block}')  
     # set up the sound file names
     stimuli, channels, fs = ef.setup_audio_files(sound_filenames, stim_for_block, params)
     
@@ -161,7 +161,7 @@ for iblock in range(nBlocks):
     #=====================
     # give the instructions and block related information here
     block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press any button to start'
-    display_text(block_start_text, win)
+    ef.display_text(block_start_text, win)
     # Wait for any key press to continue
     kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
@@ -178,8 +178,8 @@ for iblock in range(nBlocks):
         #=====================
         #START TRIAL
         #===================== 
-        instruction_text = get_counterbalance_instruction(exp_info['counterbalance'], nTrials, itrial)
-        t_trial = display_text(instruction_text, win)
+        instruction_text = ef.get_counterbalance_instruction(exp_info['counterbalance'], nTrials, itrial)
+        t_trial = ef.display_text(instruction_text, win)
         
         # setup trial specific parameters
         row = df_shuffled.loc[itrial]
@@ -210,26 +210,27 @@ for iblock in range(nBlocks):
             if keys[0].name == 'escape':
                 core.quit()
             else:
-                reaction_time, name, tDown, button_press_duration = get_key_values_when_response(keys)
-                actual_response = check_response(exp_info['counterbalance'], name)
+                reaction_time, name, tDown, button_press_duration = ef.get_key_values_when_response(keys)
+                actual_response = ef.check_response(exp_info['counterbalance'], name)
 
         else:
-            reaction_time, name, tDown, button_press_duration = get_key_values_when_noresponse(max_wait_time)
+            reaction_time, name, tDown, button_press_duration = ef.get_key_values_when_noresponse(max_wait_time)
         
 
         output_data = pd.concat([output_data, pd.DataFrame({'participant_id': exp_info['participant_id'],
-                                            'block_idx': which_block,
-                                            'trial_idx': [itrial+1],
-                                            'stim_code': row['stim_code'],
-                                            'percentage': row['percentage'],
-                                            'unitdur': row['unitdur'],
-                                            'rt': reaction_time,
-                                            'key_name': name,  
-                                            'key_tDown': tDown,
-                                            'button_press_duration': button_press_duration,
-                                            'expected_response': row['expected_response'],
-                                            'actual_response': actual_response,
-                                            'counterbalance_condition': exp_info['counterbalance']})])
+                                                            'time': exp_info['time'],
+                                                            'block_idx': which_block,
+                                                            'trial_idx': [itrial + 1],
+                                                            'rt': reaction_time,
+                                                            'key_name': name,
+                                                            'key_tDown': tDown,
+                                                            'button_press_duration': button_press_duration,
+                                                            'stim_code': row['stim_code'],
+                                                            'unitdur': row['unitdur'],
+                                                            'percentage': row['percentage'],
+                                                            'expected_response': row['expected_response'],
+                                                            'actual_response': actual_response,
+                                                            'counterbalance_condition': exp_info['counterbalance']})])
         
     save_output_df(output_data, experiment_mark, which_block, params)
     percent_correct = calculate_performance(output_data)

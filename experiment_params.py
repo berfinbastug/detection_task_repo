@@ -23,7 +23,7 @@ iti = 1  # inter trial interval
 #OUTPUT
 #=====================
 # planning to change this!
-keys_output_columns = ['participant_id', 'time', 'block_idx',
+output_data_columns = ['participant_id', 'time', 'block_idx',
                        'trial_idx', 'rt', 'key_name', 'key_tDown', 
                        'button_press_duration', 'stim_code', 'unitdur', 
                        'percentage', 'expected_response', 'actual_response', 'counterbalance_condition']
