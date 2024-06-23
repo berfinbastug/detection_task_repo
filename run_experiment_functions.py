@@ -1,14 +1,8 @@
-from psychopy.hardware import brainproducts
 from psychtoolbox import WaitSecs, GetSecs
-from psychtoolbox import audio, PsychPortAudio
-from psychopy import visual, core
+from psychopy import visual
 import os.path as op
-import pandas as pd
-import numpy as np
 import soundfile as sf
 from datetime import datetime
-import pkg_resources
-import experiment_params
 
 
 #=====================
@@ -22,6 +16,9 @@ def get_datetime_string():
 #=====================
 #SET UP AUDIO
 #====================
+# The setup_audio_files function preloads and processes a list of audio files, 
+# ensuring they have a consistent sampling rate and number of channels. 
+# The audio data is scaled by a specified RMS value and stored in a dictionary for later use, along with the sampling rate and channel information.
 def setup_audio_files(sound_filenames, stim_for_block, params):
 
     # Preload stimuli from wav-file
@@ -72,6 +69,9 @@ def setup_audio_files(sound_filenames, stim_for_block, params):
 #=====================
 #DISPLAY INSTRUCTION
 #====================
+# The function displays a string of text both on a PsychoPy window (if provided) and in the console. 
+# It then returns the time at which the text was displayed. 
+# The function uses PsychoPy's visual.TextStim to handle the graphical display of the text.
 def display_text(string, win):
     if win is not None:
         text = visual.TextStim(
@@ -139,14 +139,12 @@ def get_key_values_when_noresponse(max_wait_time):
     return reaction_time, name, tDown, button_press_duration
 
 
-
-
 #=====================
 #SAVE OUPUT
 #====================
-def save_output(output, experiment_mark, which_block, params):
+def save_output(output, experiment_mark, which_block, data_dir):
     file_name = 'block_no_'+str(which_block)+ '_' + experiment_mark
-    output_data_directory = op.join(params.data_dir, file_name)
+    output_data_directory = op.join(data_dir, file_name)
     output.to_csv(output_data_directory, sep='\t', index=False)
 
 

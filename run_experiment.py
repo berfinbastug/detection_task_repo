@@ -232,7 +232,7 @@ for iblock in range(nBlocks):
                                                             'actual_response': actual_response,
                                                             'counterbalance_condition': exp_info['counterbalance']})])
         
-    save_output_df(output_data, experiment_mark, which_block, params)
+    ef.save_output_df(output_data, experiment_mark, which_block, data_dir)
     percent_correct = calculate_performance(output_data)
     feedback_text = f'Percentage correct is: {percent_correct}%, press any button to continue'
     display_text(feedback_text, win)
