@@ -68,20 +68,20 @@ The psyramp function is designed to apply a cosine-squared ramp (fade-in and fad
 * Set up the system
 * By preparing the keyboard, timer, windows, and learning about the blocks (their directory and number)
 * Loop over blocks
- * Read the block specific data frame 
- * Shuffle the data frame and save the shuffled data frame
- * Preload stimuli
- * Define stimuli (stream)
- * Timing parameters
- * Prepare a data frame to store output ***(column names: participant_id, time, block_idx, trial_idx, rt, key_name, key_tDwon, button_press_duration, stim_code, unitdur, percentage, expected_response, actual_response, counterbalance_condition)***
- * Present instructions
- * Learn when the block starts and clear the existing events if any
- * Loop over trials
-  * Start the trial, give an instruction text
-  * Set up trial specific parameters
-  * Arrange timing: First Trial: The stimulus is presented 0.5 seconds after the start of the trial. Subsequent Trials: The stimulus onset time is based on the previous trial's onset time, reaction time, and the current trial's ITI. This ensures that each trial starts at a dynamically calculated time, allowing for variable reaction times and ITIs between trials.
-  * present stimuli and collect responses
-  * reset the clock
-  * get the key responses and attach the result to the output data frame
- * save the block specific data frame
- * give a feedback
+  * Read the block specific data frame 
+  * Shuffle the data frame and save the shuffled data frame
+  * Preload stimuli
+  * Define stimuli (stream)
+  * Timing parameters
+  * Prepare a data frame to store output ***(column names: participant_id, time, block_idx, trial_idx, rt, key_name, key_tDwon, button_press_duration, stim_code, unitdur, percentage, expected_response, actual_response, counterbalance_condition)***
+  * Present instructions
+  * Learn when the block starts and clear the existing events if any
+  * Loop over trials
+    * Start the trial, give an instruction text
+    * Set up trial specific parameters
+    * Arrange timing: First Trial: The stimulus is presented 0.5 seconds after the start of the trial. Subsequent Trials: The stimulus onset time is based on the previous trial's onset time, reaction time, and the current trial's ITI. This ensures that each trial starts at a dynamically calculated time, allowing for variable reaction times and ITIs between trials.
+    * present stimuli and collect responses
+    * reset the clock
+    * get the key responses and attach the result to the output data frame
+  * save the block specific data frame
+  * give a feedback
