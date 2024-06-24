@@ -49,14 +49,15 @@ The psyramp function is designed to apply a cosine-squared ramp (fade-in and fad
 4. **pseudorandomize_and_save_df(df, which_block, exp_info, table_dir):** Shuffles the rows of a DataFrame until no percentage value appears more than three times consecutively, then saves the shuffled DataFrame as a TSV file.
 5. **save_output_df(output, experiment_mark, which_block, data_dir):** The function saves the provided output data to a file in a specified directory. The file is named based on the block number and experiment mark, and the data is saved in a tab-separated format without row indices.
 
-run_experiment_functions.py [import as ef]
-(1) get_datetime_string
-(2) setup_audio_files (sound_filenames, stim_for_block, params): The function preloads and processes a list of audio files, ensuring they have a consistent sampling rate and number of channels. The audio data is scaled by a specified RMS value and stored in a dictionary for later use, along with the sampling rate and channel information.
-(3) display_text(string, win): The function displays a string of text both on a PsychoPy window (if provided) and in the console. It then returns the time at which the text was displayed. The function uses PsychoPy's visual.TextStim to handle the graphical display of the text.
-(4) check_response(counterbalance_info, key_name): the function translates key presses ('2' or '3') into actual responses ("yes" or "no") based on the counterbalance condition (1 or 2). It returns 1 for "yes" and 0 for "no", ensuring that the interpretation of the key press is consistent with the counterbalance information.
-(5) get_counterbalance_instructions(counterbalance_value, nTrials, itrial): The function creates and returns instructional text for a trial, indicating which button (left or right) corresponds to "YES" or "NO" based on the counterbalance condition. The text also includes the current trial number and the total number of trials.
-(6) get_key_values_when_response(keys): The function takes a list of key press events and returns the reaction time, key name, press down time, and duration of the first key press event in the list.
-(7) get_key_values_when_noresponse(max_wait_time): The function returns default values to indicate no key press was made within the specified max_wait_time. It returns the maximum wait time as the reaction time, and default values for the key name, press down time, and press duration.
+# run_experiment_functions.py 
+(import as ef)
+1. **get_datetime_string:**
+2. **setup_audio_files (sound_filenames, stim_for_block, params):** The function preloads and processes a list of audio files, ensuring they have a consistent sampling rate and number of channels. The audio data is scaled by a specified RMS value and stored in a dictionary for later use, along with the sampling rate and channel information.
+3. **display_text(string, win):** The function displays a string of text both on a PsychoPy window (if provided) and in the console. It then returns the time at which the text was displayed. The function uses PsychoPy's visual.TextStim to handle the graphical display of the text.
+4. **check_response(counterbalance_info, key_name):** the function translates key presses ('2' or '3') into actual responses ("yes" or "no") based on the counterbalance condition (1 or 2). It returns 1 for "yes" and 0 for "no", ensuring that the interpretation of the key press is consistent with the counterbalance information.
+5. **get_counterbalance_instructions(counterbalance_value, nTrials, itrial):** The function creates and returns instructional text for a trial, indicating which button (left or right) corresponds to "YES" or "NO" based on the counterbalance condition. The text also includes the current trial number and the total number of trials.
+6. **get_key_values_when_response(keys):** The function takes a list of key press events and returns the reaction time, key name, press down time, and duration of the first key press event in the list.
+7. **get_key_values_when_noresponse(max_wait_time):** The function returns default values to indicate no key press was made within the specified max_wait_time. It returns the maximum wait time as the reaction time, and default values for the key name, press down time, and press duration.
 
 
 (9) calculate_performance(keys_output): The function computes the percentage of correct responses by comparing expected and actual responses in the provided data. It returns the percentage of cases where the expected response matches the actual response.
