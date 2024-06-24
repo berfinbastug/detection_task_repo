@@ -40,7 +40,12 @@ This function generates tone clouds stimulus with specified frequency and time p
 # ramp_function.py
 The psyramp function is designed to apply a cosine-squared ramp (fade-in and fade-out) to a signal x. This can be useful in audio processing to smoothly transition the start and end of a signal to avoid abrupt changes, which can create clicks or other unwanted artifacts. 
 
-# pseudorandomization.py
-This script provides functions for pseudorandomizing a DataFrame and ensuring specific conditions are met before saving the shuffled DataFrame as a TSV file. There are two functions: 
-  1. **check_consecutive_occurrences:** Verifies that no value in an array occurs more than three times consecutively.
-  2. **shuffled_df:** Shuffles the rows of a DataFrame until no percentage value appears more than three times consecutively, then saves the shuffled DataFrame as a TSV file.
+
+# data_frame_functions.py (import as dff)
+1. **Generate_baseline_table:** This function generates a list of trial conditions for an experiment based on provided parameters. It creates combinations of unit durations and repetition percentages, assigns a specific stimulus code for each combination, and specifies expected responses.
+2. **get_df(table_name, table_dir):** to read a tab-separated values (TSV) file into a Pandas DataFrame and return both the DataFrame and the number of rows (trials) it contains.
+3. **check_consecutive_occurrences(array):** Verifies that no value in an array occurs more than three times consecutively.
+4. **pseudorandomize_and_save_df(df, which_block, exp_info, table_dir):** Shuffles the rows of a DataFrame until no percentage value appears more than three times consecutively, then saves the shuffled DataFrame as a TSV file.
+5. **save_output_df(output, experiment_mark, which_block, data_dir):** The function saves the provided output data to a file in a specified directory. The file is named based on the block number and experiment mark, and the data is saved in a tab-separated format without row indices.
+
+
