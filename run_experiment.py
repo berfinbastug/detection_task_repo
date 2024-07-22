@@ -81,7 +81,7 @@ nBlocks = params.nblocks
 #=====================
 # LOOP OVER BLOCKS
 #=====================
-for iblock in range(nBlocks):  
+for iblock in range(1):  
     which_block = iblock + 1
 
     #=====================
@@ -174,7 +174,7 @@ for iblock in range(nBlocks):
     #=====================
     # LOOP OVER TRIALS
     #=====================
-    for itrial in range(nTrials):
+    for itrial in range(5):
         #=====================
         #START TRIAL
         #===================== 
@@ -232,16 +232,16 @@ for iblock in range(nBlocks):
                                                             'actual_response': actual_response,
                                                             'counterbalance_condition': exp_info['counterbalance']})])
         
-    ef.save_output_df(output_data, experiment_mark, which_block, data_dir)
-    percent_correct = calculate_performance(output_data)
+    dff.save_output_df(output_data, experiment_mark, which_block, data_dir)
+    percent_correct = ef.calculate_performance(output_data)
     feedback_text = f'Percentage correct is: {percent_correct}%, press any button to continue'
-    display_text(feedback_text, win)
+    ef.display_text(feedback_text, win)
     kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
     stream[0].close()
 
 experiment_end_text = 'end of the experiment, press any button to end the experiment'
-display_text(experiment_end_text, win)
+ef.display_text(experiment_end_text, win)
 kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
 # end session by closing the window completely
