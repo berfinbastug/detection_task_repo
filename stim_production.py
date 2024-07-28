@@ -48,19 +48,19 @@ combinations = list(itertools.product(unit_dur_list, rep_percentage_list))
 # Again, for each duration, there are basically two crude categories: 
 # stimulus absent(percentage_zero) and stimulus present(the remainin 9 levels)
 # for each stimulus present level, there are corresponding stimulus absent trials. 
-# nTrial_0.111 = 3, corresponding to that nTrial_0 = 3
-# nTrial_0.222 = 3, corresponding to that nTrial_0 = 3
-# nTrial_0.333 = 3, corresponding to that nTrial_0 = 3
-# nTrial_0.444 = 3, corresponding to that nTrial_0 = 3
-# nTrial_0.556 = 3, corresponding to that nTrial_0 = 3
-# nTrial_0.667 = 3, corresponding to that nTrial_0 = 3
-# nTrial_0.778 = 3, corresponding to that nTrial_0 = 3
-# nTrial_0.889 = 3, corresponding to that nTrial_0 = 3
-# nTrial_1 = 3,     corresponding to that nTrial_0 = 3
-# this means that the number of percentage zero trials should be 9*3, the number of other level trials shoudl be 3
+# nTrial_0.111 = 2, corresponding to that nTrial_0 = 2
+# nTrial_0.222 = 2, corresponding to that nTrial_0 = 2
+# nTrial_0.333 = 2, corresponding to that nTrial_0 = 2
+# nTrial_0.444 = 2, corresponding to that nTrial_0 = 2
+# nTrial_0.556 = 2, corresponding to that nTrial_0 = 2
+# nTrial_0.667 = 2, corresponding to that nTrial_0 = 2
+# nTrial_0.778 = 2, corresponding to that nTrial_0 = 2
+# nTrial_0.889 = 2, corresponding to that nTrial_0 = 2
+# nTrial_1 = 2,     corresponding to that nTrial_0 = 2
+# this means that the number of percentage zero trials should be 9*2, the number of other level trials shoudl be 2
 # I HOPE THIS IS CLEAR ENOUGH!!!
-n_percentage_zero = 27
-n_rest = 3
+n_percentage_zero = 18
+n_rest = 2
 
 for iblock in range(params.nblocks):
 
