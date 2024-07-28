@@ -91,7 +91,7 @@ ef.display_text(experiment_details_text, win)
 kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
 experimental_instructions = ("During each block, you will hear long sequences of noise-like sounds. Some of these sequences contain repeating chunks, while others do not."  
-                             "Your task is to listen carefully and report whether or not you hear repeating chunks by answering 'yes' or 'no.' If you detect repeating chunks, answer 'yes.' If you do not detect repeating chunks, answer no." 
+                             "Your task is to listen carefully and report whether or not you hear repeating chunks by answering YES or NO. If you detect repeating chunks, answer YES. If you do not detect repeating chunks, answer NO." 
                              "Try to respond as quickly as possible while maintaining high accuracy.\n"
                              "\n"
                              "\n"
