@@ -154,10 +154,10 @@ def get_key_values_when_noresponse(max_wait_time):
 def get_counterbalance_instruction(counterbalance_value, nTrials, itrial):
     if counterbalance_value == 1:
         # LEFT (2): YES, RIGHT (3): NO
-        instruction_text = f'Trial {itrial + 1} of {nTrials}\n LEFT: YES       RIGHT: NO'
+        instruction_text = f'Trial {itrial + 1} of {nTrials}\n  \nLEFT: YES               RIGHT: NO'
     elif counterbalance_value == 2:
         # LEFT (2): NO, RIGHT (3): YES
-        instruction_text = f'Trial {itrial + 1} of {nTrials}\n LEFT: NO       RIGHT: YES'
+        instruction_text = f'Trial {itrial + 1} of {nTrials}\n  \nLEFT: NO                RIGHT: YES'
     
     return instruction_text
 
