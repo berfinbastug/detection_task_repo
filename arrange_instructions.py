@@ -58,7 +58,8 @@ timer = core.Clock()
 # screen = 0, shows the display window in the control room
 win = visual.Window([1920, 1080], fullscr=True, monitor="testMonitor", units="cm", screen = 1)
 
-experiment_start_text = ("Welcome to our experiment.\n Please carefully read the following instructions.\n"
+experiment_start_text = ("Welcome to our experiment.\n"
+                         "Please carefully read the following instructions.\n"
                          "\n"
                          "\n"
                          "You can press any button to continue to the next page.")

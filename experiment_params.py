@@ -33,6 +33,6 @@ output_data_columns = ['participant_id', 'time', 'block_idx',
 #=====================
 # device_name = 'US-4x4HR: USB Audio (hw:0,0)'
 # device_name = 'MacBook Pro Speakers'
-device_name = 'EarPods'
+device_name = 'MacBook Pro Speakers'
 device_id = 1
 stimulus_rms = 1
