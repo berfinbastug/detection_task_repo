@@ -160,6 +160,8 @@ for iblock in range(1):
     #PRESENT INSTRUCTIONS
     #=====================
     # give the instructions and block related information here
+    # Welcome to the first session of my experiment. Please carefully read the following instructions. This session consists of 7 blocks. Each block lasts about 11 minutes. There will be short breaks between each block. Use this time to rest and prepare for the next block. 🙂
+    experiment_start_text = 'Welcome to our experiment.\n' + 'Please carefully read the following instructions. '
     block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press any button to start'
     ef.display_text(block_start_text, win)
     # Wait for any key press to continue
