@@ -244,6 +244,7 @@ for iblock in range(2):
         else:
             reaction_time, name, tDown, button_press_duration = ef.get_key_values_when_noresponse(max_wait_time)
         
+        print(row['stim_name'])
 
         output_data = pd.concat([output_data, pd.DataFrame({'participant_id': exp_info['participant_id'],
                                                             'time': exp_info['time'],
@@ -262,6 +263,7 @@ for iblock in range(2):
         
     dff.save_output_df(output_data, experiment_mark, which_block, data_dir)
     percent_correct = ef.calculate_performance(output_data)
+    
     if percent_correct > 60:
         feedback_text = f'Percentage correct is: {percent_correct}%, press any button to continue'
     else: 
