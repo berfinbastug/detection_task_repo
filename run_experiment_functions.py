@@ -79,9 +79,9 @@ def display_text(string, win):
             #alignHoriz='left',
             text=string,
             height=1.5, 
-            alignText= 'left',
+            #alignText= 'left',
             #pos = (10, 0),
-            wrapWidth= 30.0
+            wrapWidth= 40.0
         )
         text.draw()
         win.flip()

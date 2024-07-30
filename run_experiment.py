@@ -27,7 +27,7 @@ import run_experiment_functions as ef
 #DEFINE DIRECTORIES
 #=====================
 # when I switch to a new computer, just change the main_dir
-main_dir = '/Users/bastugb/Desktop/detection_experiment'
+main_dir = '/home/bastugb/Documents/detection_experiment'
 stimuli_dir = main_dir + '/stimuli'
 data_dir = main_dir + '/data'
 table_dir = main_dir + '/tables'
@@ -109,7 +109,7 @@ nBlocks = params.nblocks
 #=====================
 # LOOP OVER BLOCKS
 #=====================
-for iblock in range(1):  
+for iblock in range(2):  
     which_block = iblock + 1
 
     #=====================
@@ -188,8 +188,6 @@ for iblock in range(1):
     #PRESENT INSTRUCTIONS
     #=====================
     # give the instructions and block related information here
-    # Welcome to the first session of my experiment. Please carefully read the following instructions. This session consists of 7 blocks. Each block lasts about 11 minutes. There will be short breaks between each block. Use this time to rest and prepare for the next block. 🙂
-    experiment_start_text = 'Welcome to our experiment.\n' + 'Please carefully read the following instructions. '
     block_start_text = f'Block {which_block} of {nBlocks}\n' + 'Press any button to start'
     ef.display_text(block_start_text, win)
     # Wait for any key press to continue
@@ -264,7 +262,11 @@ for iblock in range(1):
         
     dff.save_output_df(output_data, experiment_mark, which_block, data_dir)
     percent_correct = ef.calculate_performance(output_data)
-    feedback_text = f'Percentage correct is: {percent_correct}%, press any button to continue'
+    if percent_correct > 60:
+        feedback_text = f'Percentage correct is: {percent_correct}%, press any button to continue'
+    else: 
+        feedback_text = f'Percentage correct is: {percent_correct}%, you can do better!\nPress any button to continue'
+        
     ef.display_text(feedback_text, win)
     kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
