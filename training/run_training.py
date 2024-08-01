@@ -2,11 +2,7 @@
 # ESTABLISH THE WORKING ENVIRONMENT
 #=====================
 import sys
-<<<<<<< HEAD
 default_path = '/home/bastugb/Documents/detection_experiment'
-=======
-default_path = '/Users/bastugb/Desktop/tapping_experiment'
->>>>>>> 581b5716e663cbe7066f6202feb86779a96200f5
 sys.path.append(default_path)
 
 import pandas as pd

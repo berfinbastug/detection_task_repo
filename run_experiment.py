@@ -83,15 +83,15 @@ kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
 experiment_details_text = ("This session consists of 7 blocks. Each block lasts about 11 minutes." 
                            "There will be short breaks between each block. Use this time to rest and prepare for the next block.\n"
-                           "\n"
+                           "You can leave the booth in between blocks to stretch your legs."
                            "\n" 
                            "Continue for detailed instructions about the experimental procedure.")
 
 ef.display_text(experiment_details_text, win)
 kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
-experimental_instructions = ("During each block, you will hear long sequences of noise-like sounds. Some of these sequences contain repeating chunks, while others do not."  
-                             "Your task is to listen carefully and report whether or not you hear repeating chunks by answering YES or NO. If you detect repeating chunks, answer YES. If you do not detect repeating chunks, answer NO." 
+experimental_instructions = ("During each block, you will hear long sequences of noise-like sounds. Some of these sequences contain embedded repeating patterns, while others consist of a continuous sequence of sounds with no repeating patterns at all."  
+                             "Your task is to listen carefully and report whether or not you hear repeating patterns by answering YES or NO. If you detect repeating patterns, answer YES. If you do not detect repeating patterns, answer NO." 
                              "Try to respond as quickly as possible while maintaining high accuracy.\n"
                              "\n"
                              "\n"
@@ -280,8 +280,4 @@ kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
 # end session by closing the window completely
 win.close()
-
- 
-    
-
 
