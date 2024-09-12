@@ -109,7 +109,7 @@ nBlocks = params.nblocks
 #=====================
 # LOOP OVER BLOCKS
 #=====================
-for iblock in range(2):  
+for iblock in range(nBlocks):  
     which_block = iblock + 1
 
     #=====================
@@ -202,7 +202,7 @@ for iblock in range(2):
     #=====================
     # LOOP OVER TRIALS
     #=====================
-    for itrial in range(2):
+    for itrial in range(nTrials):
         #=====================
         #START TRIAL
         #===================== 
