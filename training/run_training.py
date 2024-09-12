@@ -54,14 +54,26 @@ timer = core.Clock()
 win = visual.Window([1920, 1080], fullscr=True, monitor="testMonitor", units="cm", screen = 1)
 
 
-experiment_start_text = ("Welcome to our experiment.\n"
+#=====================
+#READ THE BLOCK SPECIFIC DATA FRAME 
+#=====================
+table_name = 'detection_training_block_0_table.tsv'
+df, nTrials = dff.get_df(table_name, table_dir)
+
+
+
+
+
+
+experiment_start_text = ("Welcome to our experiment. This is a training session.\n"
                          "Please carefully read the following instructions.\n"
                          "\n"
                          "\n"
-                         "You can press any button to continue to the next page.")
+                         "You can now put on your headphones and proceed with the detailed instructions regarding the experimental procedure.")
 
 ef.display_text(experiment_start_text, win)
 kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
+
 
 experimental_instructions = ("During each block, you will hear long sequences of noise-like sounds. Some of these sequences contain embedded repeating patterns, while others consist of a continuous sequence of sounds with no repeating patterns at all."  
                              "Your task is to listen carefully and report whether or not you hear repeating patterns by answering YES or NO. If you detect repeating patterns, answer YES. If you do not detect repeating patterns, answer NO." 
@@ -74,11 +86,6 @@ ef.display_text(experimental_instructions, win)
 kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
  
 
-#=====================
-#READ THE BLOCK SPECIFIC DATA FRAME 
-#=====================
-table_name = 'detection_training_block_0_table.tsv'
-df, nTrials = dff.get_df(table_name, table_dir)
 
 while True:
     df_shuffled = df.sample(frac=1).reset_index(drop=True)  # Shuffle rows
