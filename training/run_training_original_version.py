@@ -39,17 +39,60 @@ exp_info = {'counterbalance': 0}
 my_dlg = gui.DlgFromDict(dictionary=exp_info)
 
 
+#=====================
+#SET UP THE SYSTEM 
+#=====================
+# prepare keyboard
+kb = keyboard.Keyboard()  # to handle input from keyboard (supersedes event.getKeys())
+# create response time clock
+timer = core.Clock()
+
+# define the window (size, color, units, fullscreen mode) 
+# the size of the window is specific to the screen we are using, also I don't know why I call monitor, a 'testMonitor'
+# screen = 1, shows the display window in the booth
+# screen = 0, shows the display window in the control room
+win = visual.Window([1920, 1080], fullscr=True, monitor="testMonitor", units="cm", screen = 1)
+
 
 #=====================
-#READ THE TRAINING SPECIFIC DATA FRAME 
+#READ THE BLOCK SPECIFIC DATA FRAME 
 #=====================
 table_name = 'detection_training_block_0_table.tsv'
 df, nTrials = dff.get_df(table_name, table_dir)
+
+
+
+
+
+
+experiment_start_text = ("Welcome to our experiment. This is a training session.\n"
+                         "Please carefully read the following instructions.\n"
+                         "\n"
+                         "\n"
+                         "You can now put on your headphones and proceed with the detailed instructions regarding the experimental procedure.")
+
+ef.display_text(experiment_start_text, win)
+kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
+
+
+experimental_instructions = ("During each block, you will hear long sequences of noise-like sounds. Some of these sequences contain embedded repeating patterns, while others consist of a continuous sequence of sounds with no repeating patterns at all."  
+                             "Your task is to listen carefully and report whether or not you hear repeating patterns by answering YES or NO. If you detect repeating patterns, answer YES. If you do not detect repeating patterns, answer NO." 
+                             "Try to respond as quickly as possible while maintaining high accuracy.\n"
+                             "\n"
+                             "\n"
+                             "Press any button to continue.")
+
+ef.display_text(experimental_instructions, win)
+kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
+ 
+
 
 while True:
     df_shuffled = df.sample(frac=1).reset_index(drop=True)  # Shuffle rows
     if dff.check_consecutive_occurrences(df_shuffled['percentage']):
         break
+
+
 
 
 #=====================
@@ -59,8 +102,6 @@ while True:
 sound_filenames = df_shuffled['stim_name'].to_list()
 # set up the sound file names
 stimuli, channels, fs = ef.setup_audio_files(sound_filenames, stimuli_dir, params)
-
-
 
 #=====================
 #DEFINE STIMULI (STREAM)
@@ -88,101 +129,7 @@ for slave in stream:
 
 # stream is ready now
 stream[0].stimuli = stimuli
-
-
-#=====================
-#SET UP THE SYSTEM 
-#=====================
-# prepare keyboard
-kb = keyboard.Keyboard()  # to handle input from keyboard (supersedes event.getKeys())
-# create response time clock
-timer = core.Clock()
-
-# define the window (size, color, units, fullscreen mode) 
-# the size of the window is specific to the screen we are using, also I don't know why I call monitor, a 'testMonitor'
-# screen = 1, shows the display window in the booth
-# screen = 0, shows the display window in the control room
-win = visual.Window([1920, 1080], fullscr=True, monitor="testMonitor", units="cm", screen = 1)
-
-
-
-#=====================
-#PRESENT INSTRUCTIONS
-#=====================
-# give the instructions and block related information here
-experiment_start_text = ("Welcome to our experiment. This is a training session.\n"
-                         "Please carefully read the following instructions.\n"
-                         "\n"
-                         "\n"
-                         "You can now put on your headphones and proceed with the detailed instructions regarding the experimental procedure.")
-
-
-
-ef.display_text(experiment_start_text, win)
-kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
-
-
-experimental_instructions = ("During each block, you will hear long sequences of noise-like sounds. Some of these sequences contain embedded repeating patterns, while others consist of a continuous sequence of sounds with no repeating patterns at all."  
-                             "Your task is to listen carefully and report whether or not you hear repeating patterns by answering YES or NO. If you detect repeating patterns, answer YES. If you do not detect repeating patterns, answer NO." 
-                             "Try to respond as quickly as possible while maintaining high accuracy.\n"
-                             "\n"
-                             "\n"
-                             "Press any button to continue.")
-
-ef.display_text(experimental_instructions, win)
-kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
- 
-
-
-
-
-stim_introduction_text = ("You will encounter three different speeds in the experimental blocks.\n"
-                        "Now, you will hear examples of the fastest and slowest speeds."
-                        "This is to show that the repeating pattern will always fall within these temporal limits, so you should not expect patterns that are shorter or longer than this range.\n"
-                        "\n"
-                        "\n"
-                        "Press any button to hear a sequence with the fastest speed.")
-                    
-
-ef.display_text(stim_introduction_text, win)
-kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
-
-
-#=====================
-#FASTEST SPEED
-#=====================
-ef.display_text('A sequence with the fastest speed.', win)
-fastest_idx = df_shuffled[df_shuffled['stim_code'] == 104].index
-row = df_shuffled.loc[fastest_idx]
-stim_dur = row['stim_duration'].iloc[0]
-# stim_code = row['stim_code'].iloc[0]
-stim = stream[0].stimuli[row['stim_name'].iloc[0]]
-stream[0].fill_buffer(stim)
-stream[0].start(when = 0, wait_for_start = 1)
-WaitSecs(stim_dur)
-
-
-ef.display_text('You can press any button to hear a sequence with the slowest speed.', win)
-kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
-
-
-#=====================
-#SLOWEST SPEED
-#=====================
-ef.display_text('A sequence with the slowest speed.', win)
-fastest_idx = df_shuffled[df_shuffled['stim_code'] == 204].index
-row = df_shuffled.loc[fastest_idx]
-stim_dur = row['stim_duration'].iloc[0]
-# stim_code = ['stim_code']
-stim = stream[0].stimuli[row['stim_name'].iloc[0]]
-stream[0].fill_buffer(stim)
-stream[0].start(when = 0, wait_for_start = 1)
-WaitSecs(stim_dur)
-
-
-ef.display_text('Now you can move on to the training block to do a practice test by pressing any button.', win)
-kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
-
+    
 #=====================
 #TIMING PARAMETERS
 #=====================
@@ -201,14 +148,20 @@ tISI = df_shuffled['isi'].to_list()  # it should be max_isi. there is no consist
 #=====================
 #PREPARE DATA FRAME TO STORE OUTPUT
 #=====================
-# this is important, becasue even if you don't want to store the output
-# you need this part to calculate the percent correct
 output_data = pd.DataFrame(columns=params.output_data_columns)
 
-
+#=====================
+#PRESENT INSTRUCTIONS
+#=====================
+# give the instructions and block related information here
+# Welcome to the first session of my experiment. Please carefully read the following instructions. This session consists of 7 blocks. Each block lasts about 11 minutes. There will be short breaks between each block. Use this time to rest and prepare for the next block. 🙂
+experiment_start_text = 'press any button to start the training block'
+ef.display_text(experiment_start_text, win)
+# Wait for any key press to continue
+kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
 #=====================
-#CLEAR THE EXISTING EVENTS IF ANY
+#LEARN WHEN THE BLOCK STARTS AND CLEAR THE EXISTING EVENTS IF ANY
 #=====================
 wakeup = GetSecs() # learn when a block starts.
 kb.clearEvents()  # clear any previous keypresses
@@ -290,6 +243,3 @@ kb.waitKeys(keyList=['1', '2', '3', '4'], waitRelease=True)
 
 # end session by closing the window completely
 win.close()
-
- 
-    
